@@ -1,32 +1,59 @@
 <template>
   <div id="app">
-    <a-button type="primary">Button></a-button>
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <a-layout id="components-layout-demo-top-side-2">
+      <a-layout-header class="header">
+        <div class="logo"/>
+        <a-menu
+          theme="dark"
+          mode="horizontal"
+          :defaultSelectedKeys="['home']"
+          :style="{ lineHeight: '64px' }"
+        >
+          <a-menu-item key="home">
+            <router-link to="/">Home</router-link>
+          </a-menu-item>
+          <a-menu-item key="data">
+            <router-link to="/data">Data</router-link>
+          </a-menu-item>
+          <a-menu-item key="model">
+            <router-link to="/model">Model</router-link>
+          </a-menu-item>
+          <a-menu-item key="cloud">
+            <router-link to="/cloud">Cloud</router-link>
+          </a-menu-item>
+          <a-menu-item key="about">
+            <router-link to="/about">About</router-link>
+          </a-menu-item>
+        </a-menu>
+      </a-layout-header>
+    <a-layout><router-view/></a-layout>
+    </a-layout>
   </div>
 </template>
 
+<script>
+export default {
+  data () {
+    return {
+      collapsed: false
+    }
+  }
+}
+</script>
+
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+#components-layout-demo-top-side-2 .logo {
+  width: 120px;
+  height: 31px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px 28px 16px 0;
+  float: left;
 }
 </style>

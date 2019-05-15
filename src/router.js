@@ -12,6 +12,21 @@ export default new Router({
       component: Home
     },
     {
+      path: '/data',
+      name: 'data',
+      component: () => import(/* webpackChunkName: "about" */ './views/Data.vue')
+    },
+    {
+      path: '/model',
+      name: 'model',
+      component: () => import(/* webpackChunkName: "about" */ './views/Model.vue')
+    },
+    {
+      path: '/cloud',
+      name: 'cloud',
+      component: () => import(/* webpackChunkName: "about" */ './views/Cloud.vue')
+    },
+    {
       path: '/about',
       name: 'about',
       // route level code-splitting
