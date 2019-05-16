@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
+import Model from './views/Model.vue'
 
 Vue.use(Router)
 
@@ -14,17 +15,28 @@ export default new Router({
     {
       path: '/data',
       name: 'data',
-      component: () => import(/* webpackChunkName: "about" */ './views/Data.vue')
+      component: () => import('./views/Data.vue')
     },
     {
       path: '/model',
-      name: 'model',
-      component: () => import(/* webpackChunkName: "about" */ './views/Model.vue')
+      // name: 'model',
+      component: Model,
+      children: [{
+        path: 'browse',
+        component: () => import('./views/ModelBrowse.vue')
+      },
+      {
+        path: 'uploadmodel',
+        component: () => import('./views/ModelUpload.vue')
+      }, {
+        path: 'attach',
+        component: () => import('./views/Attach.vue')
+      }] 
     },
     {
       path: '/cloud',
       name: 'cloud',
-      component: () => import(/* webpackChunkName: "about" */ './views/Cloud.vue')
+      component: () => import('./views/Cloud.vue')
     },
     {
       path: '/about',
