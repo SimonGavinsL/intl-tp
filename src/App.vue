@@ -2,9 +2,11 @@
   <div id="app">
     <a-layout id="components-layout-demo-top-side-2">
       <a-layout-header class="header">
-        <div class="logo"/>
+        <div class="logo" style="margin-top: 0;">
+          <img alt="Tongji logo" src="./assets/Tongji_Univ_logo.png" style="width: 60px; height: 60px;">
+        </div>
         <a-menu
-          theme="dark"
+          theme="light"
           mode="horizontal"
           :defaultSelectedKeys="['home']"
           :style="{ lineHeight: '64px' }"
