@@ -26,6 +26,7 @@
           </a-menu-item>
         </a-menu>
       </a-layout-header>
+      <br>
     <a-layout><router-view/></a-layout>
     </a-layout>
   </div>
@@ -49,6 +50,7 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+
 #components-layout-demo-top-side-2 .logo {
   width: 120px;
   height: 31px;
