@@ -50,6 +50,31 @@
         </a-col>
       </a-row>
     </div>
+    <br>
+    <a-list :grid="{ gutter: 16, column: 4 }" :dataSource="data">
+      <a-list-item slot="renderItem" slot-scope="item, index">
+        <a-card hoverable style="width: 300px">
+          <img
+            alt="example"
+            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+            slot="cover"
+          >
+          <!-- <img :alt="index" :src="item.src" slot="cover"> -->
+          <template class="ant-card-actions" slot="actions">
+            <a-icon type="setting"/>
+            <a-icon type="edit"/>
+            <a-icon type="ellipsis"/>
+          </template>
+          <a-card-meta :title="item.title" :description="item.desc">
+            <a-avatar
+              slot="avatar"
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            />
+            <!-- <a-avatar slot="avatar" :src="item.avatar"/> -->
+          </a-card-meta>
+        </a-card>
+      </a-list-item>
+    </a-list>
   </div>
 </template>
 
@@ -61,13 +86,20 @@ export default {
   data() {
     return {
       options: [
-        { value: 'CN', label: 'China', children: [] },
+        { value: "CN", label: "China", children: [] },
         { value: "GR", label: "Greece", children: [] },
         { value: "GB", label: "UK", children: [] },
         { value: "US", label: "US", children: [] }
+      ],
+      data: [
+        // {
+        //   title: String,
+        //   desc: String,
+        //   src: URL,
+        //   avatar: URL
+        // }
       ]
-    
-    }
+    };
   },
   methods: {
     onSearch(value) {
@@ -77,7 +109,10 @@ export default {
       console.log(value, selectedOptions);
     },
     filter(inputValue, path) {
-      return (path.some(option => (option.label).toLowerCase().indexOf(inputValue.toLowerCase()) > -1));
+      return path.some(
+        option =>
+          option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+      );
     },
     changePlatform(value) {
       console.log(`selected ${value}`);
@@ -98,11 +133,11 @@ export default {
       let i = ["CN", "GR", "GB", "US"].indexOf(element["country"]);
       if (i != -1) {
         this.options[i]["children"].push({
-          value: element["name"].replace(' ', '').toLowerCase(),
+          value: element["name"].replace(" ", "").toLowerCase(),
           label: element["name"]
         });
       }
-    })
+    });
   }
 };
 </script>
