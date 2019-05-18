@@ -25,6 +25,10 @@
             <editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)"/>
           </template>
 
+         <template slot="type" slot-scope="text, record">
+            <selectable-cell :option="text" @change="onCellChange(record.key, 'type', $event)"/>
+          </template>
+
           <template slot="unit" slot-scope="text, record">
             <editable-cell :text="text" @change="onCellChange(record.key, 'unit', $event)"/>
           </template>
@@ -42,10 +46,12 @@
 import reqwest from "reqwest";
 import Papa from "papaparse";
 import EditableCell from "@/components/EditableCell";
+import SelectableCell from "@/components/SelectableCell";
 
 export default {
   components: {
-    EditableCell
+    EditableCell,
+    SelectableCell
   },
   data() {
     return {
@@ -55,12 +61,13 @@ export default {
         {
           title: "name",
           dataIndex: "name",
-          width: "30%",
+          width: "25%",
           scopedSlots: { customRender: "name" }
         },
         {
           title: "type",
-          dataIndex: "type"
+          dataIndex: "type",
+          scopedSlots: { customRender: "type" }
         },
         {
           title: "unit",
@@ -73,7 +80,12 @@ export default {
           scopedSlots: { customRender: "desc" }
         }
       ],
-      dataSource: []
+      dataSource: [],
+      radioStyle: {
+        display: "block",
+        height: "30px",
+        lineHeight: "30px"
+      }
     };
   },
   methods: {
@@ -92,7 +104,7 @@ export default {
             this.dataSource.push({
               key: index,
               name: element,
-              type: "",
+              type: "Categorical/Character/Numeric",
               unit: "",
               desc: ""
             });
@@ -133,6 +145,7 @@ export default {
         target[dataIndex] = value;
         this.dataSource = dataSource;
       }
+      console.log(this.dataSource)
     }
   }
 };
