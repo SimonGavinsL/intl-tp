@@ -4,7 +4,12 @@
     <a-row type="flex" justify="space-around">
       <a-col :span="4">
         <div class="clearfix">
-          <a-upload :fileList="fileList" :remove="handleRemove" :beforeUpload="beforeUpload">
+          <a-upload
+            :fileList="fileList"
+            :remove="handleRemove"
+            :beforeUpload="beforeUpload"
+            accept=".csv"
+          >
             <a-button>
               <a-icon type="upload"/>Select File
             </a-button>
@@ -25,7 +30,7 @@
             <editable-cell :text="text" @change="onCellChange(record.key, 'name', $event)"/>
           </template>
 
-         <template slot="type" slot-scope="text, record">
+          <template slot="type" slot-scope="text, record">
             <selectable-cell :option="text" @change="onCellChange(record.key, 'type', $event)"/>
           </template>
 
@@ -43,7 +48,7 @@
 </template>
 
 <script>
-import reqwest from "reqwest";
+import axios from "axios";
 import Papa from "papaparse";
 import EditableCell from "@/components/EditableCell";
 import SelectableCell from "@/components/SelectableCell";
@@ -80,6 +85,7 @@ export default {
           scopedSlots: { customRender: "desc" }
         }
       ],
+      fileResult: {},
       dataSource: [],
       radioStyle: {
         display: "block",
@@ -95,20 +101,25 @@ export default {
       newFileList.splice(index, 1);
       this.fileList = newFileList;
     },
+    buildSource(source) {
+      source.forEach((element, index) => {
+        this.dataSource.push({
+          key: index,
+          name: element,
+          type: "",
+          unit: "",
+          desc: ""
+        });
+      });
+    },
     beforeUpload(file) {
       this.fileList = [...this.fileList, file];
       Papa.parse(file, {
-        // Arrow function, lexical scoping https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
+        // Arrow function, lexical scoping
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
         complete: results => {
-          results["data"][0].forEach((element, index) => {
-            this.dataSource.push({
-              key: index,
-              name: element,
-              type: "Categorical/Character/Numeric",
-              unit: "",
-              desc: ""
-            });
-          });
+          this.fileResult = results["data"];
+          this.buildSource(this.fileResult[0])
         }
       });
       return false;
@@ -121,22 +132,32 @@ export default {
       });
       this.uploading = true;
 
-      // You can use any AJAX library you like
-      reqwest({
-        url: "//jsonplaceholder.typicode.com/posts/",
-        method: "post",
-        processData: false,
-        data: formData,
-        success: () => {
-          this.fileList = [];
+      const indexName = this.fileList[0].name.slice(0, -4).replace(' ', ''); // Remove .csv and blankspaces
+      const baseURL = "http://localhost:9200/"; // Should set to serverside ES address after production
+      axios
+        .put(baseURL + indexName + "?pretty")
+        .then(response => {
+          console.log(response);
+          axios
+            .post(baseURL + indexName + "/_doc/1?pretty", {
+              // Content (beware of format of bulk post)
+              // firstName: "Fred",
+              // lastName: "Flintstone"
+            })
+            .then(response => {
+              this.fileList = [];
+              this.uploading = false;
+              console.log(response);
+            })
+            .catch(error => {
+              this.uploading = false;
+              console.log(error);
+            });
+        })
+        .catch(error => {
           this.uploading = false;
-          this.$message.success("upload successfully.");
-        },
-        error: () => {
-          this.uploading = false;
-          this.$message.error("upload failed.");
-        }
-      });
+          console.log(error);
+        });
     },
     onCellChange(key, dataIndex, value) {
       const dataSource = [...this.dataSource];
@@ -145,7 +166,7 @@ export default {
         target[dataIndex] = value;
         this.dataSource = dataSource;
       }
-      console.log(this.dataSource)
+      console.log(this.dataSource);
     }
   }
 };
