@@ -14,13 +14,30 @@
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="8">
           <div class="gutter-box">
-            <a-cascader
-              :options="options"
-              :showSearch="{filter}"
-              @change="changeLocation"
-              style="width: 260px"
-              placeholder="location"
-            />
+            <a-select
+              :defaultValue="countryData[0]"
+              @change="handleProvinceChange"
+              showSearch
+              optionFilterProp="children"
+              style="width: 120px; margin-right: 20px;"
+              @focus="handleFocus"
+              @blur="handleBlur"
+              :filterOption="filterOption"
+            >
+              <a-select-option v-for="country in countryData" :key="country">{{country}}</a-select-option>
+            </a-select>
+            <a-select
+              v-model="secondCity"
+              showSearch
+              optionFilterProp="children"
+              style="width: 200px"
+              @focus="handleFocus"
+              @blur="handleBlur"
+              @change="handleChange"
+              :filterOption="filterOption"
+            >
+              <a-select-option v-for="city in cities" :key="city">{{city}}</a-select-option>
+            </a-select>
           </div>
         </a-col>
         <a-col class="gutter-row" :span="4">
@@ -59,13 +76,13 @@
             src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
             slot="cover"
           >
-          <!-- <img :alt="index" :src="item.src" slot="cover"> -->
+          <!-- <img :alt="index" :src="item.image" slot="cover"> -->
           <template class="ant-card-actions" slot="actions">
             <a-icon type="setting"/>
             <a-icon type="edit"/>
             <a-icon type="ellipsis"/>
           </template>
-          <a-card-meta :title="item.title" :description="item.desc">
+          <a-card-meta :title="item.name" :description="item.description">
             <a-avatar
               slot="avatar"
               src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
@@ -80,64 +97,98 @@
 
 <script>
 import cities from "cities.json";
+import axios from "axios";
 
 export default {
   name: "ModelBrowse",
   data() {
     return {
-      options: [
-        { value: "CN", label: "China", children: [] },
-        { value: "GR", label: "Greece", children: [] },
-        { value: "GB", label: "UK", children: [] },
-        { value: "US", label: "US", children: [] }
-      ],
-      data: [
-        // {
-        //   title: String,
-        //   desc: String,
-        //   src: URL,
-        //   avatar: URL
-        // }
-      ]
+      countryData: ["CN", "GR", "GB", "US"],
+      cityData: {
+        CN: [],
+        GR: [],
+        GB: [],
+        US: []
+      },
+      cities: [],
+      secondCity: "",
+      dataSource: [],
+      data: []
     };
   },
   methods: {
     onSearch(value) {
       console.log(value);
     },
-    changeLocation(value, selectedOptions) {
-      console.log(value, selectedOptions);
+    handleProvinceChange(value) {
+      this.cities = this.cityData[value];
+      this.secondCity = this.cityData[value][0];
     },
-    filter(inputValue, path) {
-      return path.some(
-        option =>
-          option.label.toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+    handleBlur() {},
+    handleFocus() {},
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
       );
     },
     changePlatform(value) {
-      console.log(`selected ${value}`);
+      // console.log(`selected ${value}`);
+      this.data = this.dataSource.filter(
+        element => element["platform"] === value
+      );
     },
     changeRoad(value) {
-      console.log(`selected ${value}`);
+      // console.log(`selected ${value}`);
+      this.data = this.dataSource.filter(
+        element => element["road_type"] === value
+      );
     },
     changeDate(date, dateString) {
-      console.log(date, dateString);
+      // console.log(date, dateString);
+      this.data = this.dataSource.filter(element => {
+        let created = new Date(element["create_time"]);
+        let modified = new Date(element["modified_time"]);
+        let start = new Date(dateString[0]);
+        let end = new Date(dateString[1]);
+
+        return (
+          (created >= start && created <= end) ||
+          (modified >= start && modified <= end)
+        );
+      });
     },
     handleChange(value) {
       console.log(`selected ${value}`);
     }
   },
   mounted() {
-    // Todo: Unable to search
     cities.forEach(element => {
-      let i = ["CN", "GR", "GB", "US"].indexOf(element["country"]);
-      if (i != -1) {
-        this.options[i]["children"].push({
-          value: element["name"].replace(" ", "").toLowerCase(),
-          label: element["name"]
-        });
+      let i = ["CN", "GR", "GB", "US"].indexOf(element.country);
+      if (i != -1 && !this.cityData[element.country].includes(element.name)) {
+        this.cityData[element.country].push(element.name);
       }
     });
+    this.cities = this.cityData[this.countryData[0]];
+    this.secondCity = this.cityData[this.countryData[0]][0];
+
+    axios
+      .get(this.$hostname + "model/")
+      .then(response => {
+        // handle success
+        // console.log(response);
+        this.dataSource = response["data"]["response"];
+        this.data = this.dataSource;
+      })
+      .catch(error => {
+        // handle error
+        console.log(error);
+      })
+      .finally(() => {
+        // always executed
+        console.log("finally");
+      });
   }
 };
 </script>
