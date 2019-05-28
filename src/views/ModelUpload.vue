@@ -50,11 +50,14 @@
       </a-radio-group>
     </a-form-item>
 
-    <a-form-item v-bind="formItemLayout" label="Statistics Type">
+    <a-form-item v-bind="formItemLayout" label="Statistical Type">
       <a-radio-group v-decorator="['stat']">
-        <a-radio value="categ">Categorical</a-radio>
-        <a-radio value="char">Character</a-radio>
-        <a-radio value="num">Numeric</a-radio>
+        <a-radio value="frequency">Frequency</a-radio>
+        <a-radio value="logit">Logit</a-radio>
+        <a-radio value="negbi">Negative Binomial</a-radio>
+        <a-radio value="poigamma">Poisson-gamma</a-radio>
+        <a-radio value="probit">Probit</a-radio>
+        <a-radio value="severity">Severity</a-radio>
       </a-radio-group>
     </a-form-item>
 
@@ -66,16 +69,17 @@
       </a-radio-group>
     </a-form-item>
 
+    <a-form-item v-bind="formItemLayout" label="Functionality">
+      <a-radio-group v-decorator="['func']">
+        <a-radio value="comp">Comparison</a-radio>
+        <a-radio value="pred">Prediction</a-radio>
+        <a-radio value="regr">Regression</a-radio>
+      </a-radio-group>
+    </a-form-item>
+
     <a-form-item v-bind="formItemLayout" label="Description">
       <a-input v-decorator="['desc']" placeholder="description"/>
     </a-form-item>
-
-    <!-- Todo: determine the necessity -->
-    <!-- <a-form-item v-bind="formItemLayout" label="Functionality">
-      <a-radio-group v-decorator="['radio-group']">
-        <a-radio value="predict">Predict</a-radio>
-      </a-radio-group>
-    </a-form-item>-->
 
     <a-form-item v-bind="formItemLayout" label="File">
       <div class="dropbox">

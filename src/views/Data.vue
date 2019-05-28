@@ -100,6 +100,7 @@ export default {
       const newFileList = this.fileList.slice();
       newFileList.splice(index, 1);
       this.fileList = newFileList;
+      this.dataSource = [];
     },
     buildSource(source) {
       source.forEach((element, index) => {
@@ -119,7 +120,7 @@ export default {
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
         complete: results => {
           this.fileResult = results["data"];
-          this.buildSource(this.fileResult[0])
+          this.buildSource(this.fileResult[0]);
         }
       });
       return false;
@@ -132,7 +133,7 @@ export default {
       });
       this.uploading = true;
 
-      const indexName = this.fileList[0].name.slice(0, -4).replace(' ', ''); // Remove .csv and blankspaces
+      const indexName = this.fileList[0].name.slice(0, -4).replace(" ", ""); // Remove .csv and blankspaces
       const baseURL = "http://localhost:9200/"; // Should set to serverside ES address after production
       axios
         .put(baseURL + indexName + "?pretty")
