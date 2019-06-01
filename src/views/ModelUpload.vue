@@ -13,35 +13,40 @@
       <a-select
         v-decorator="[
           'country',
-          {rules: [{ required: true, message: 'Please select your country!' }]}
+          {rules: [{ required: true, message: 'Please select country!' }]}
         ]"
-        placeholder="Please select a country"
+        @change="handleCountryChange"
+        showSearch
+        optionFilterProp="children"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        :filterOption="filterOption"
       >
-        <a-select-option value="CN">China</a-select-option>
-        <a-select-option value="GR">Greece</a-select-option>
-        <a-select-option value="GB">UK</a-select-option>
-        <a-select-option value="US">US</a-select-option>
+        <a-select-option v-for="country in countryData" :key="country">{{country}}</a-select-option>
       </a-select>
     </a-form-item>
 
-    <!-- Todo: Add cities to select options -->
     <a-form-item v-bind="formItemLayout" label="Cities">
       <a-select
         v-decorator="[
-          'cities', {
-            rules: [{ required: true, message: 'Please select cities!', type: 'array' }],
+          'secondCity', {
+            rules: [{ required: true, message: 'Please select city!' }],
           }]"
-        mode="multiple"
-        placeholder="Please select cities"
+        showSearch
+        optionFilterProp="children"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleChange"
+        :filterOption="filterOption"
       >
-        <a-select-option value="red">Red</a-select-option>
-        <a-select-option value="green">Green</a-select-option>
-        <a-select-option value="blue">Blue</a-select-option>
+        <a-select-option v-for="city in cities" :key="city">{{city}}</a-select-option>
       </a-select>
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Road Type">
-      <a-radio-group v-decorator="['road']">
+      <a-radio-group
+        v-decorator="['road',{rules: [{ required: true, message: 'Please select road type!' }]}]"
+      >
         <a-radio value="free">Freeway</a-radio>
         <a-radio value="inter">Intersection</a-radio>
         <a-radio value="ml">Macro Level</a-radio>
@@ -51,7 +56,9 @@
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Statistical Type">
-      <a-radio-group v-decorator="['stat']">
+      <a-radio-group
+        v-decorator="['stat',{rules: [{ required: true, message: 'Please select statistical type!' }]}]"
+      >
         <a-radio value="frequency">Frequency</a-radio>
         <a-radio value="logit">Logit</a-radio>
         <a-radio value="negbi">Negative Binomial</a-radio>
@@ -62,7 +69,9 @@
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Platform">
-      <a-radio-group v-decorator="['platform']">
+      <a-radio-group
+        v-decorator="['platform', {rules: [{ required: true, message: 'Please select platform!' }]}]"
+      >
         <a-radio value="python">Python</a-radio>
         <a-radio value="r">R</a-radio>
         <a-radio value="sas">SAS</a-radio>
@@ -70,7 +79,9 @@
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Functionality">
-      <a-radio-group v-decorator="['func']">
+      <a-radio-group
+        v-decorator="['func', {rules: [{ required: true, message: 'Please select functionality!' }]}]"
+      >
         <a-radio value="comp">Comparison</a-radio>
         <a-radio value="pred">Prediction</a-radio>
         <a-radio value="regr">Regression</a-radio>
@@ -87,7 +98,7 @@
           v-decorator="['files', {
             valuePropName: 'fileList',
             getValueFromEvent: normFile,
-          }]"
+          },{rules: [{ required: true, message: 'Please select model file!' }]}]"
           name="files"
           action="/upload.do"
         >
@@ -107,17 +118,39 @@
 </template>
 
 <script>
+import cities from "cities.json";
+
 export default {
   data: () => ({
     formItemLayout: {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 }
-    }
+    },
+    countryData: ["CN", "GR", "GB", "US"],
+    cityData: {
+      CN: [],
+      GR: [],
+      GB: [],
+      US: []
+    },
+    cities: []
   }),
   beforeCreate() {
     this.form = this.$form.createForm(this);
   },
   methods: {
+    handleCountryChange(value) {
+      this.cities = this.cityData[value];
+    },
+    handleBlur() {},
+    handleFocus() {},
+    filterOption(input, option) {
+      return (
+        option.componentOptions.children[0].text
+          .toLowerCase()
+          .indexOf(input.toLowerCase()) >= 0
+      );
+    },
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
@@ -132,7 +165,18 @@ export default {
         return e;
       }
       return e && e.fileList;
+    },
+    handleChange(value) {
+      console.log(`selected ${value}`);
     }
+  },
+  mounted() {
+    cities.forEach(element => {
+      let i = ["CN", "GR", "GB", "US"].indexOf(element.country);
+      if (i != -1 && !this.cityData[element.country].includes(element.name)) {
+        this.cityData[element.country].push(element.name);
+      }
+    });
   }
 };
 </script>

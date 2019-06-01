@@ -74,7 +74,7 @@
             alt="example"
             src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
             slot="cover"
-          > -->
+          >-->
           <img :alt="index" :src="item.image" slot="cover">
           <template class="ant-card-actions" slot="actions">
             <a-icon type="setting"/>
@@ -169,8 +169,6 @@ export default {
         this.cityData[element.country].push(element.name);
       }
     });
-    // this.cities = this.cityData[this.countryData[0]];
-    // this.secondCity = this.cityData[this.countryData[0]][0];
 
     axios
       .get(this.$hostname + "model/")
