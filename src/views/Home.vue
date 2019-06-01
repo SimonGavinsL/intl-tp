@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to International Transporation Platform!"/>
+    <HelloWorld msg="Welcome to International Traffic Safety Data Platform!"/>
   </div>
 </template>
 

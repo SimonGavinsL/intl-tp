@@ -1,24 +1,24 @@
 <template>
   <a-form id="components-form-demo-validate-other" :form="form" @submit="handleSubmit">
     <!-- Todo: Add models from server to select options -->
-    <a-form-item v-bind="formItemLayout" label="Model">
+    <a-form-item v-bind="formItemLayout" label="Name">
       <a-select
         showSearch
-        placeholder="input model name"
+        placeholder="input attachment name"
         :defaultActiveFirstOption="false"
         :showArrow="false"
         :filterOption="false"
         @search="handleSearch"
         @change="handleChange"
         :notFoundContent="null"
-        v-decorator="['model']"
+        v-decorator="['atta']"
       >
         <a-select-option v-for="d in data" :key="d.value">{{d.text}}</a-select-option>
       </a-select>
     </a-form-item>
 
-    <a-form-item v-bind="formItemLayout" label="File Type">
-      <a-radio-group v-decorator="['filetype']">
+    <a-form-item v-bind="formItemLayout" label="Type">
+      <a-radio-group v-decorator="['type']">
         <a-radio-button value="data">Data</a-radio-button>
         <a-radio-button value="res">Result</a-radio-button>
       </a-radio-group>

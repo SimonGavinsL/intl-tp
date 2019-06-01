@@ -119,6 +119,7 @@ export default {
         // Arrow function, lexical scoping
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
         complete: results => {
+          console.log(results);
           this.fileResult = results["data"];
           this.buildSource(this.fileResult[0]);
         }
@@ -136,29 +137,54 @@ export default {
       const indexName = this.fileList[0].name.slice(0, -4).replace(" ", ""); // Remove .csv and blankspaces
       const baseURL = "http://localhost:9200/"; // Should set to serverside ES address after production
       axios
-        .put(baseURL + indexName + "?pretty")
+        .put(baseURL + indexName + "?pretty") // Create an index
         .then(response => {
           console.log(response);
-          axios
-            .post(baseURL + indexName + "/_doc/1?pretty", {
-              // Content (beware of format of bulk post)
-              // firstName: "Fred",
-              // lastName: "Flintstone"
-            })
-            .then(response => {
-              this.fileList = [];
-              this.uploading = false;
-              console.log(response);
-            })
-            .catch(error => {
-              this.uploading = false;
-              console.log(error);
-            });
+
+          // Upload data
+          this.fileResult.forEach((element, index) => {
+            if (index != 0) {
+              let value = {};
+              element.forEach((element2, index2) => {
+                value[this.dataSource[index2].name] =
+                  this.dataSource[index2].type === "char"
+                    ? element2
+                    : parseFloat(element2); // parseFloat() will parse a string to an integer if so
+              });
+              axios
+                .put(baseURL + indexName + "/_doc/" + index + "?pretty", value)
+                .then(response => {
+                  console.log(response);
+                })
+                .catch(error => {
+                  console.log(error);
+                });
+            }
+          });
+
+          // Upload data file specs
+          this.dataSource.forEach((element, index) => {
+            axios
+              .put(
+                baseURL + indexName + "/_doc/" + (-1 - index) + "?pretty",
+                element
+              )
+              .then(response => {
+                console.log("element: ", element);
+                console.log(response);
+              })
+              .catch(error => {
+                console.log(error);
+              });
+          });
         })
         .catch(error => {
           this.uploading = false;
+          this.dataSource = [];
           console.log(error);
         });
+      this.fileList = [];
+      this.uploading = false;
     },
     onCellChange(key, dataIndex, value) {
       const dataSource = [...this.dataSource];
@@ -167,7 +193,6 @@ export default {
         target[dataIndex] = value;
         this.dataSource = dataSource;
       }
-      console.log(this.dataSource);
     }
   }
 };

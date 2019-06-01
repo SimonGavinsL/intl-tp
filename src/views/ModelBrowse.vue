@@ -15,7 +15,6 @@
         <a-col class="gutter-row" :span="8">
           <div class="gutter-box">
             <a-select
-              :defaultValue="countryData[0]"
               @change="handleProvinceChange"
               showSearch
               optionFilterProp="children"
@@ -71,12 +70,12 @@
     <a-list :grid="{ gutter: 16, column: 4 }" :dataSource="data">
       <a-list-item slot="renderItem" slot-scope="item, index">
         <a-card hoverable style="width: 300px">
-          <img
+          <!-- <img
             alt="example"
             src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
             slot="cover"
-          >
-          <!-- <img :alt="index" :src="item.image" slot="cover"> -->
+          > -->
+          <img :alt="index" :src="item.image" slot="cover">
           <template class="ant-card-actions" slot="actions">
             <a-icon type="setting"/>
             <a-icon type="edit"/>
@@ -170,14 +169,13 @@ export default {
         this.cityData[element.country].push(element.name);
       }
     });
-    this.cities = this.cityData[this.countryData[0]];
-    this.secondCity = this.cityData[this.countryData[0]][0];
+    // this.cities = this.cityData[this.countryData[0]];
+    // this.secondCity = this.cityData[this.countryData[0]][0];
 
     axios
       .get(this.$hostname + "model/")
       .then(response => {
         // handle success
-        // console.log(response);
         this.dataSource = response["data"]["response"];
         this.data = this.dataSource;
       })

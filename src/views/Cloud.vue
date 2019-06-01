@@ -1,5 +1,5 @@
 <template>
   <div class="cloud">
-    <h1>This is an cloud page</h1>
+    <h1>This is a cloud page</h1>
   </div>
 </template>
