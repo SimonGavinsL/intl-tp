@@ -19,7 +19,6 @@ export default new Router({
     },
     {
       path: '/model',
-      // name: 'model',
       component: Model,
       children: [{
         path: 'detail/:id',

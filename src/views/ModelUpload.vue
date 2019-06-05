@@ -48,11 +48,11 @@
         <a-radio-group
           v-decorator="['road_type',{rules: [{ required: true, message: 'Please select road type!' }]}]"
         >
-          <a-radio value="freeway">Freeway</a-radio>
-          <a-radio value="intersection">Intersection</a-radio>
-          <a-radio value="macrolevel">Macro Level</a-radio>
-          <a-radio value="urbanarterial">Urban Arterial</a-radio>
-          <a-radio value="urbanexpressway">Urban Expressway</a-radio>
+          <a-radio value="Freeway">Freeway</a-radio>
+          <a-radio value="Intersection">Intersection</a-radio>
+          <a-radio value="Macro Level">Macro Level</a-radio>
+          <a-radio value="Urban Arterial">Urban Arterial</a-radio>
+          <a-radio value="Urban Expressway">Urban Expressway</a-radio>
         </a-radio-group>
       </a-form-item>
 
@@ -60,12 +60,12 @@
         <a-radio-group
           v-decorator="['statistical_type',{rules: [{ required: true, message: 'Please select statistical type!' }]}]"
         >
-          <a-radio value="frequency">Frequency</a-radio>
-          <a-radio value="logit">Logit</a-radio>
-          <a-radio value="negativebinomial">Negative Binomial</a-radio>
-          <a-radio value="poissongamma">Poisson-gamma</a-radio>
-          <a-radio value="probit">Probit</a-radio>
-          <a-radio value="severity">Severity</a-radio>
+          <a-radio value="Frequency">Frequency</a-radio>
+          <a-radio value="Logit">Logit</a-radio>
+          <a-radio value="Negative Binomial">Negative Binomial</a-radio>
+          <a-radio value="Poisson-gamma">Poisson-gamma</a-radio>
+          <a-radio value="Probit">Probit</a-radio>
+          <a-radio value="Severity">Severity</a-radio>
         </a-radio-group>
       </a-form-item>
 
@@ -73,9 +73,9 @@
         <a-radio-group
           v-decorator="['platform', {rules: [{ required: true, message: 'Please select platform!' }]}]"
         >
-          <a-radio value="python">Python</a-radio>
-          <a-radio value="r">R</a-radio>
-          <a-radio value="sas">SAS</a-radio>
+          <a-radio value="Python">Python</a-radio>
+          <a-radio value="R">R</a-radio>
+          <a-radio value="SAS">SAS</a-radio>
         </a-radio-group>
       </a-form-item>
 
@@ -83,14 +83,29 @@
         <a-radio-group
           v-decorator="['functionality', {rules: [{ required: true, message: 'Please select functionality!' }]}]"
         >
-          <a-radio value="comparison">Comparison</a-radio>
-          <a-radio value="prediction">Prediction</a-radio>
-          <a-radio value="regression">Regression</a-radio>
+          <a-radio value="Comparison">Comparison</a-radio>
+          <a-radio value="Prediction">Prediction</a-radio>
+          <a-radio value="Regression">Regression</a-radio>
         </a-radio-group>
       </a-form-item>
 
       <a-form-item v-bind="formItemLayout" label="Description">
         <a-input v-decorator="['description']" placeholder="description"/>
+      </a-form-item>
+
+      <a-form-item v-bind="formItemLayout" label="Image">
+        <a-upload
+          v-decorator="['image', {
+            valuePropName: 'imageList',
+            getValueFromEvent: normFile2,
+            rules: [{ required: true, message: 'Please upload a image!' }]
+          }]"
+          :beforeUpload="beforeUpload"
+        >
+          <a-button>
+            <a-icon type="upload"/>Select Image
+          </a-button>
+        </a-upload>
       </a-form-item>
 
       <a-form-item v-bind="formItemLayout" label="File">
@@ -125,9 +140,10 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 }
     },
-    countryData: ["CN", "GR", "GB", "US"],
+    countryData: ["CN", "DE", "GR", "GB", "US"],
     cityData: {
       CN: [],
+      DE: [],
       GR: [],
       GB: [],
       US: []
@@ -158,40 +174,36 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           let formData = new FormData();
-
-          // let body = [];
-          // console.log(values)
-          // Object.keys(values).forEach(element => {
-          //   if (element != "files") {
-          //     body.push('"'+element+'":"'+values[element]+'"')
-          //   }
-          // });
-         
-          const json = JSON.stringify(values);
-          const blob = new Blob([json], {
+          const blob = new Blob([JSON.stringify(values)], {
             type: "application/json"
           });
-
           formData.append("body", blob);
-
           formData.append("file", values.files[0].originFileObj);
+          formData.append("image", values.image[0].originFileObj);
 
           axios
             .post(this.$hostname + "model", formData, {
               "Content-Type": "multipart/form-data"
             })
             .then(response => {
+              alert("Uploaded successfully");
+              this.form.resetFields();
               console.log(response);
             })
             .catch(error => {
               console.log(error);
             });
-
-          alert("Uploaded successfully");
         }
       });
     },
     normFile(e) {
+      console.log("Upload event:", e);
+      if (Array.isArray(e)) {
+        return e;
+      }
+      return e && e.fileList;
+    },
+    normFile2(e) {
       console.log("Upload event:", e);
       if (Array.isArray(e)) {
         return e;
@@ -204,7 +216,7 @@ export default {
   },
   mounted() {
     cities.forEach(element => {
-      let i = ["CN", "GR", "GB", "US"].indexOf(element.country);
+      let i = ["CN", "DE", "GR", "GB", "US"].indexOf(element.country);
       if (i != -1 && !this.cityData[element.country].includes(element.name)) {
         this.cityData[element.country].push(element.name);
       }

@@ -42,20 +42,20 @@
         <a-col class="gutter-row" :span="4">
           <div class="gutter-box">
             <a-select defaultValue style="width: 120px" @change="changePlatform">
-              <a-select-option value="python">Python</a-select-option>
-              <a-select-option value="r">R</a-select-option>
-              <a-select-option value="sas">SAS</a-select-option>
+              <a-select-option value="Python">Python</a-select-option>
+              <a-select-option value="R">R</a-select-option>
+              <a-select-option value="SAS">SAS</a-select-option>
             </a-select>
           </div>
         </a-col>
         <a-col class="gutter-row" :span="4">
           <div class="gutter-box">
             <a-select defaultValue style="width: 180px" @change="changeRoad">
-              <a-select-option value="freeway">Freeway</a-select-option>
-              <a-select-option value="intersection">Intersection</a-select-option>
-              <a-select-option value="macro">Macro Level</a-select-option>
-              <a-select-option value="arterial">Urban Arterial</a-select-option>
-              <a-select-option value="express">Urban Expressway</a-select-option>
+              <a-select-option value="Freeway">Freeway</a-select-option>
+              <a-select-option value="Intersection">Intersection</a-select-option>
+              <a-select-option value="Macro Level">Macro Level</a-select-option>
+              <a-select-option value="Urban Arterial">Urban Arterial</a-select-option>
+              <a-select-option value="Urban Expressway">Urban Expressway</a-select-option>
             </a-select>
           </div>
         </a-col>
@@ -70,12 +70,7 @@
     <a-list :grid="{ gutter: 16, column: 4 }" :dataSource="data">
       <a-list-item slot="renderItem" slot-scope="item, index">
         <a-card hoverable style="width: 300px" @click="toDetail(index)">
-          <img
-            alt="example"
-            src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            slot="cover"
-          >
-          <!-- <img :alt="index" :src="item.image" slot="cover"> -->
+          <img :alt="index" :src="item.image" slot="cover">
           <template class="ant-card-actions" slot="actions">
             <a-icon type="setting"/>
             <a-icon type="edit"/>
@@ -97,28 +92,6 @@
 <script>
 import cities from "cities.json";
 import axios from "axios";
-
-// const data = [
-//   {
-//     image:
-//       "https://www.discoverlosangeles.com/sites/default/files/styles/hero/public/images/2019-01/freeways-lights.JPG?h=50844e28&itok=n4xZApyz",
-//     name: "LA_Freeway_20150324",
-//     road_type: "freeway"
-//   },
-//   {
-//     image:
-//       "https://tse1-mm.cn.bing.net/th?id=OIP.e6gdi_6gUxJfFnJce--uVwHaE8&w=174&h=105&c=8&rs=1&qlt=90&dpr=2&pid=3.1&rm=2",
-//     name: "LA_UrbanExp",
-//     road_type: "urbanexpressway"
-//   },
-//   {
-//     image:
-//       "https://tse1-mm.cn.bing.net/th?id=OIP.Db19y-2YaJE3sTdFnIjGJAHaE8&w=174&h=105&c=8&rs=1&qlt=90&dpr=2&pid=3.1&rm=2",
-//     name: "I-405 Urban Art",
-//     road_type: "urbanarterial",
-//     description: "This urban arterial encounters congestions often."
-//   }
-// ];
 
 export default {
   name: "ModelBrowse",
@@ -187,7 +160,7 @@ export default {
       console.log(`selected ${value}`);
     },
     toDetail(index) {
-      this.$router.push({ path: "/model/detail/" + index });
+      this.$router.push({ path: "/model/detail/" + this.data[index]['id'] });
     }
   },
   mounted() {
@@ -198,13 +171,17 @@ export default {
       }
     });
 
-    this.data = this.dataSource;
     axios
       .get(this.$hostname + "model/")
       .then(response => {
+        console.log(response);
         // handle success
         this.dataSource = response["data"]["response"];
         this.data = this.dataSource;
+        this.data.forEach(element => {
+          element["image"] =
+            this.$hostname + "/model/" + element["id"] + "/image";
+        });
         console.log("success");
       })
       .catch(error => {

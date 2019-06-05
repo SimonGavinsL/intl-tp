@@ -18,8 +18,3 @@ new Vue({
 
 Vue.prototype.$hostname = 'http://localhost:8080/'
 Vue.prototype.$eshostname = 'http://localhost:9200/'
-Vue.prototype.$instance = axios.create({
-  baseURL: 'https://localhost:8080/',
-  timeout: 1000,
-  headers: { 'Content-Type': 'multipart/form-data' }
-});
