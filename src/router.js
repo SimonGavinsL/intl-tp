@@ -23,7 +23,7 @@ export default new Router({
       children: [{
         path: 'detail/:id',
         component: () => import('./views/ModelDetail.vue')
-      },{
+      }, {
         path: 'browse',
         component: () => import('./views/ModelBrowse.vue')
       },
@@ -33,7 +33,7 @@ export default new Router({
       }, {
         path: 'attach',
         component: () => import('./views/Attach.vue')
-      }] 
+      }]
     },
     {
       path: '/cloud',

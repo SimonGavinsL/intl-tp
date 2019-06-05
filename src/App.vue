@@ -3,7 +3,11 @@
     <a-layout id="components-layout-demo-top-side-2">
       <a-layout-header class="header">
         <div class="logo" style="margin-top: 0;">
-          <img alt="Tongji logo" src="./assets/Tongji_Univ_logo.png" style="width: 60px; height: 60px;">
+          <img
+            alt="Tongji logo"
+            src="./assets/Tongji_Univ_logo.png"
+            style="width: 60px; height: 60px;"
+          >
         </div>
         <a-menu
           theme="light"
@@ -29,19 +33,21 @@
         </a-menu>
       </a-layout-header>
       <br>
-    <a-layout><router-view/></a-layout>
+      <a-layout>
+        <router-view/>
+      </a-layout>
     </a-layout>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       collapsed: false
-    }
+    };
   }
-}
+};
 </script>
 
 <style>

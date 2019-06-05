@@ -116,8 +116,6 @@ export default {
     beforeUpload(file) {
       this.fileList = [...this.fileList, file];
       Papa.parse(file, {
-        // Arrow function, lexical scoping
-        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions
         complete: results => {
           console.log(results);
           this.fileResult = results["data"];
@@ -134,6 +132,7 @@ export default {
       });
       this.uploading = true;
 
+      // TODO: May use elasticsearch JavaScript API instead
       const indexName = this.fileList[0].name.slice(0, -4).replace(" ", ""); // Remove .csv and blankspaces
       axios
         .put(this.$eshostname + indexName + "?pretty") // Create an index

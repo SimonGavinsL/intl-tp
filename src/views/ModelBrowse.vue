@@ -143,7 +143,6 @@ export default {
       console.log(this.data);
     },
     changeDate(date, dateString) {
-      // console.log(date, dateString);
       this.data = this.dataSource.filter(element => {
         let created = new Date(element["create_time"]);
         let modified = new Date(element["modified_time"]);
@@ -160,7 +159,7 @@ export default {
       console.log(`selected ${value}`);
     },
     toDetail(index) {
-      this.$router.push({ path: "/model/detail/" + this.data[index]['id'] });
+      this.$router.push({ path: "/model/detail/" + this.data[index]["id"] });
     }
   },
   mounted() {

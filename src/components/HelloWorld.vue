@@ -25,7 +25,6 @@ export default {
 };
 </script>
 <style scoped>
-/* For demo */
 .ant-carousel >>> .slick-slide {
   text-align: center;
   height: 580px;
