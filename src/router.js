@@ -22,6 +22,9 @@ export default new Router({
       // name: 'model',
       component: Model,
       children: [{
+        path: 'detail/:id',
+        component: () => import('./views/ModelDetail.vue')
+      },{
         path: 'browse',
         component: () => import('./views/ModelBrowse.vue')
       },
@@ -36,7 +39,17 @@ export default new Router({
     {
       path: '/cloud',
       name: 'cloud',
-      component: () => import('./views/Cloud.vue')
+      component: () => import('./views/Cloud.vue'),
+      children: [{
+        path: 'overview',
+        component: () => import('./views/CloudOverview.vue')
+      },{
+        path: 'container',
+        component: () => import('./views/CloudContainer.vue')
+      },{
+        path: 'image',
+        component: () => import('./views/CloudImage.vue')
+      }]
     },
     {
       path: '/about',

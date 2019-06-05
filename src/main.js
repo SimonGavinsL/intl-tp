@@ -5,6 +5,7 @@ import store from './store'
 
 import Antd from 'ant-design-vue'
 import 'ant-design-vue/dist/antd.css'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 Vue.use(Antd)
@@ -15,4 +16,10 @@ new Vue({
   render: h => h(App)
 }).$mount('#app')
 
-Vue.prototype.$hostname = 'http://192.168.123.105:8080/'
+Vue.prototype.$hostname = 'http://localhost:8080/'
+Vue.prototype.$eshostname = 'http://localhost:9200/'
+Vue.prototype.$instance = axios.create({
+  baseURL: 'https://localhost:8080/',
+  timeout: 1000,
+  headers: { 'Content-Type': 'multipart/form-data' }
+});

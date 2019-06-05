@@ -12,7 +12,7 @@
         <img alt="3" src="https://www.tongji.edu.cn/images/20190513092141.jpg">
       </div>
       <div>
-        <img alt="4" src="https://www.tongji.edu.cn/images/20190505084652.jpg">
+        <img alt="4" src="https://www.tongji.edu.cn/images/20190519135110.jpg">
       </div>
     </a-carousel>
   </div>

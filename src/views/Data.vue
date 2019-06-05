@@ -135,9 +135,8 @@ export default {
       this.uploading = true;
 
       const indexName = this.fileList[0].name.slice(0, -4).replace(" ", ""); // Remove .csv and blankspaces
-      const baseURL = "http://localhost:9200/"; // Should set to serverside ES address after production
       axios
-        .put(baseURL + indexName + "?pretty") // Create an index
+        .put(this.$eshostname + indexName + "?pretty") // Create an index
         .then(response => {
           console.log(response);
 
@@ -147,12 +146,12 @@ export default {
               let value = {};
               element.forEach((element2, index2) => {
                 value[this.dataSource[index2].name] =
-                  this.dataSource[index2].type === "char"
+                  this.dataSource[index2].type === "char" // Check field type
                     ? element2
-                    : parseFloat(element2); // parseFloat() will parse a string to an integer if so
+                    : parseFloat(element2);
               });
               axios
-                .put(baseURL + indexName + "/_doc/" + index + "?pretty", value)
+                .put(this.$eshostname + indexName + "/_doc/" + index + "?pretty", value)
                 .then(response => {
                   console.log(response);
                 })
@@ -162,11 +161,11 @@ export default {
             }
           });
 
-          // Upload data file specs
+          // Upload data column specs
           this.dataSource.forEach((element, index) => {
             axios
               .put(
-                baseURL + indexName + "/_doc/" + (-1 - index) + "?pretty",
+                this.$eshostname + indexName + "/_doc/" + (-1 - index) + "?pretty",
                 element
               )
               .then(response => {

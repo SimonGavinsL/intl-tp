@@ -4,23 +4,26 @@
     <a-form-item v-bind="formItemLayout" label="Name">
       <a-select
         showSearch
-        placeholder="input attachment name"
+        placeholder="input model name"
         :defaultActiveFirstOption="false"
         :showArrow="false"
         :filterOption="false"
         @search="handleSearch"
         @change="handleChange"
         :notFoundContent="null"
-        v-decorator="['atta']"
+        v-decorator="['modelname', {rules: [{ required: true, message: 'Please choose a model!' }]}]"
       >
         <a-select-option v-for="d in data" :key="d.value">{{d.text}}</a-select-option>
       </a-select>
     </a-form-item>
 
     <a-form-item v-bind="formItemLayout" label="Type">
-      <a-radio-group v-decorator="['type']">
+      <a-radio-group
+        v-decorator="['type', {rules: [{ required: true, message: 'Please choose a type!' }]}]"
+      >
         <a-radio-button value="data">Data</a-radio-button>
-        <a-radio-button value="res">Result</a-radio-button>
+        <a-radio-button value="result">Result</a-radio-button>
+        <a-radio-button value="others">Others</a-radio-button>
       </a-radio-group>
     </a-form-item>
 
@@ -34,6 +37,7 @@
           v-decorator="['files', {
             valuePropName: 'fileList',
             getValueFromEvent: normFile,
+            rules: [{ required: true, message: 'Please upload a file!' }]
           }]"
           name="files"
           action="/upload.do"

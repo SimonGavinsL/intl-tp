@@ -69,13 +69,13 @@
     <br>
     <a-list :grid="{ gutter: 16, column: 4 }" :dataSource="data">
       <a-list-item slot="renderItem" slot-scope="item, index">
-        <a-card hoverable style="width: 300px">
-          <!-- <img
+        <a-card hoverable style="width: 300px" @click="toDetail(index)">
+          <img
             alt="example"
             src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
             slot="cover"
-          >-->
-          <img :alt="index" :src="item.image" slot="cover">
+          >
+          <!-- <img :alt="index" :src="item.image" slot="cover"> -->
           <template class="ant-card-actions" slot="actions">
             <a-icon type="setting"/>
             <a-icon type="edit"/>
@@ -98,6 +98,28 @@
 import cities from "cities.json";
 import axios from "axios";
 
+// const data = [
+//   {
+//     image:
+//       "https://www.discoverlosangeles.com/sites/default/files/styles/hero/public/images/2019-01/freeways-lights.JPG?h=50844e28&itok=n4xZApyz",
+//     name: "LA_Freeway_20150324",
+//     road_type: "freeway"
+//   },
+//   {
+//     image:
+//       "https://tse1-mm.cn.bing.net/th?id=OIP.e6gdi_6gUxJfFnJce--uVwHaE8&w=174&h=105&c=8&rs=1&qlt=90&dpr=2&pid=3.1&rm=2",
+//     name: "LA_UrbanExp",
+//     road_type: "urbanexpressway"
+//   },
+//   {
+//     image:
+//       "https://tse1-mm.cn.bing.net/th?id=OIP.Db19y-2YaJE3sTdFnIjGJAHaE8&w=174&h=105&c=8&rs=1&qlt=90&dpr=2&pid=3.1&rm=2",
+//     name: "I-405 Urban Art",
+//     road_type: "urbanarterial",
+//     description: "This urban arterial encounters congestions often."
+//   }
+// ];
+
 export default {
   name: "ModelBrowse",
   data() {
@@ -118,6 +140,7 @@ export default {
   methods: {
     onSearch(value) {
       console.log(value);
+      this.data = this.dataSource.filter(element => element["name"] === value);
     },
     handleProvinceChange(value) {
       this.cities = this.cityData[value];
@@ -140,9 +163,11 @@ export default {
     },
     changeRoad(value) {
       // console.log(`selected ${value}`);
+      console.log(this.data);
       this.data = this.dataSource.filter(
         element => element["road_type"] === value
       );
+      console.log(this.data);
     },
     changeDate(date, dateString) {
       // console.log(date, dateString);
@@ -160,6 +185,9 @@ export default {
     },
     handleChange(value) {
       console.log(`selected ${value}`);
+    },
+    toDetail(index) {
+      this.$router.push({ path: "/model/detail/" + index });
     }
   },
   mounted() {
@@ -170,12 +198,14 @@ export default {
       }
     });
 
+    this.data = this.dataSource;
     axios
       .get(this.$hostname + "model/")
       .then(response => {
         // handle success
         this.dataSource = response["data"]["response"];
         this.data = this.dataSource;
+        console.log("success");
       })
       .catch(error => {
         // handle error
